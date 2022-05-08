@@ -1,6 +1,6 @@
 from copy import deepcopy
 import math
-from perceiver_pytorch import Perceiver
+# from perceiver_pytorch import Perceiver
 import pytorch_lightning as pl
 import torch
 from torch import nn
