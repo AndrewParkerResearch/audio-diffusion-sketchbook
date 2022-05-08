@@ -88,7 +88,7 @@ class DemoCallback(pl.Callback):
                 filename = f'demo_{trainer.global_step:08}_{i:02}.wav'
                 fake = self.ms_encoder(fake[0:1]).clamp(-1, 1).mul(32767).to(torch.int16).cpu()
                 ifake = self.ms_encoder(fake[2:3]).clamp(-1, 1).mul(32767).to(torch.int16).cpu()
-                fake = fake + (ifake * -1)
+                fake = (fake + (ifake * -1)) / 2
                 torchaudio.save(filename, fake, 44100)
                 log_dict[f'demo_{i}'] = wandb.Audio(filename,
                                                     sample_rate=44100,
