@@ -62,15 +62,15 @@ class DemoCallback(pl.Callback):
 
         demo_files = glob(f'{self.demo_dir}/**/*.wav', recursive=True)
 
-        audio_batch = torch.zeros(len(demo_files), 2, self.demo_samples)
+        audio_batch = torch.zeros(len(demo_files), 4, self.demo_samples)
 
         for i, demo_file in enumerate(demo_files):
             audio, sr = torchaudio.load(demo_file)
             audio = audio.clamp(-1, 1)
             audio = self.pad_crop(audio)
             audio = self.ms_encoder(audio)
-            audio[2:3] = audio[0:1] * -1 # add inverse channels
-            audio_batch[i] = audio
+            audio_batch[i, 0:1] = audio
+            audio_batch[i, 2:3] = audio * -1 # add inverse channels
 
         # audio_batch = self.pqmf(audio_batch)
 
