@@ -69,6 +69,7 @@ class DemoCallback(pl.Callback):
             audio = audio.clamp(-1, 1)
             audio = self.pad_crop(audio)
             audio = self.ms_encoder(audio)
+            audio[2:3] = audio[0:1] * -1 # add inverse channels
             audio_batch[i] = audio
 
         # audio_batch = self.pqmf(audio_batch)
