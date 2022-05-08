@@ -71,7 +71,7 @@ class DemoCallback(pl.Callback):
             audio = self.ms_encoder(audio)
             audio_batch[i] = audio
 
-        audio_batch = self.pqmf(audio_batch)
+        # audio_batch = self.pqmf(audio_batch)
 
         audio_batch = audio_batch.to(module.device)
 
@@ -79,13 +79,15 @@ class DemoCallback(pl.Callback):
             fakes = sample(module, audio_batch, self.demo_steps, 1)
 
         # undo the PQMF encoding
-        fakes = self.pqmf.inverse(fakes.cpu())
+        fakes = fakes.cpu() # self.pqmf.inverse(fakes.cpu())
         try:
             log_dict = {}
             for i, fake in enumerate(fakes):
 
                 filename = f'demo_{trainer.global_step:08}_{i:02}.wav'
-                fake = self.ms_encoder(fake).clamp(-1, 1).mul(32767).to(torch.int16).cpu()
+                fake = self.ms_encoder(fake[0:1]).clamp(-1, 1).mul(32767).to(torch.int16).cpu()
+                ifake = self.ms_encoder(fake[2:3]).clamp(-1, 1).mul(32767).to(torch.int16).cpu()
+                fake = fake + (ifake * -1)
                 torchaudio.save(filename, fake, 44100)
                 log_dict[f'demo_{i}'] = wandb.Audio(filename,
                                                     sample_rate=44100,

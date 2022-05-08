@@ -150,7 +150,7 @@ class AudioDiffusion(nn.Module):
         self.depth = len(c_mults)
 
         #Number of input/output audio channels for the model
-        n_io_channels = 2 * global_args.pqmf_bands #if global_args.mono else 2 * global_args.pqmf_bands
+        n_io_channels = 2 * 2 # global_args.pqmf_bands # if global_args.mono else 2 * global_args.pqmf_bands
 
         self.timestep_embed = FourierFeatures(1, 16)
 
@@ -210,7 +210,7 @@ class LightningDiffusion(pl.LightningModule):
     def __init__(self, global_args):
         super().__init__()
         
-        self.encoder = GlobalEncoder(global_args.style_latent_size, 2 * global_args.pqmf_bands)
+        self.encoder = GlobalEncoder(global_args.style_latent_size, 2 * 2) # GlobalEncoder(global_args.style_latent_size, 2 * global_args.pqmf_bands)
         self.encoder_ema = deepcopy(self.encoder)
         self.diffusion = AudioDiffusion(global_args)
         self.diffusion_ema = deepcopy(self.diffusion)
@@ -234,7 +234,7 @@ class LightningDiffusion(pl.LightningModule):
         # Get the audio files
         reals = batch[0]
     
-        reals = self.pqmf(reals)
+        # reals = self.pqmf(reals)
 
         style_latents = self.encode(reals)
         # Sample timesteps

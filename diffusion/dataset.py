@@ -53,6 +53,7 @@ class SampleDataset(torch.utils.data.Dataset):
       if self.encoding is not None:
         audio = self.encoding(audio)
 
+      audio[2:3] = audio[0:1] * -1 # add polarity inverted copy
       return (audio, audio_filename)
     except Exception as e:
      # print(f'Couldn\'t load file {audio_filename}: {e}')
