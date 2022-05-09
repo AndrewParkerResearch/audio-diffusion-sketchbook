@@ -118,7 +118,8 @@ class ResConvBlock(ResidualBlock):
 class GlobalEncoder(nn.Sequential):
     def __init__(self, latent_size, io_channels):
         c_in = io_channels
-        c_mults = [64, 64, 128, 128] + [latent_size] * 10
+        # c_mults = [64, 64, 128, 128] + [latent_size] * 10
+        c_mults = [64, 128] + [latent_size] * 5
         layers = []
         c_mult_prev = c_in
         for i, c_mult in enumerate(c_mults):
@@ -145,7 +146,8 @@ class AudioDiffusion(nn.Module):
     def __init__(self, global_args):
         super().__init__()
 
-        c_mults = [128, 128, 256, 256] + [512] * 10
+        # c_mults = [128, 128, 256, 256] + [512] * 10
+        c_mults = [128, 256] + [512] * 5
        
         self.depth = len(c_mults)
 
@@ -215,7 +217,7 @@ class LightningDiffusion(pl.LightningModule):
         self.diffusion = AudioDiffusion(global_args)
         self.diffusion_ema = deepcopy(self.diffusion)
         self.rng = torch.quasirandom.SobolEngine(1, scramble=True)
-        self.pqmf = PQMF(2, 70, global_args.pqmf_bands)
+        # self.pqmf = PQMF(2, 70, global_args.pqmf_bands)
 
     def encode(self, *args, **kwargs):
         if self.training:
