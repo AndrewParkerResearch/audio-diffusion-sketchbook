@@ -238,7 +238,7 @@ class LightningDiffusion(pl.LightningModule):
     
         # reals = self.pqmf(reals)
 
-        style_latents = self.encode(reals)
+        # style_latents = self.encode(reals)
         # Sample timesteps
         t = self.rng.draw(reals.shape[0])[:, 0].to(reals)
 
@@ -252,7 +252,8 @@ class LightningDiffusion(pl.LightningModule):
         targets = noise * alphas - reals * sigmas
 
         # Compute the model output and the loss.
-        v = self.decode(noised_reals, t, style_latents)
+        # v = self.decode(noised_reals, t, style_latents)
+        v = self.decode(noised_reals, t)
         return F.mse_loss(v, targets)
 
     def training_step(self, batch, batch_idx):
@@ -264,4 +265,4 @@ class LightningDiffusion(pl.LightningModule):
     def on_before_zero_grad(self, *args, **kwargs):
         decay = 0.98 if self.trainer.global_step < 10000 else 0.999
         ema_update(self.diffusion, self.diffusion_ema, decay)
-        ema_update(self.encoder, self.encoder_ema, decay)
+        # ema_update(self.encoder, self.encoder_ema, decay)

@@ -11,7 +11,7 @@ def sample(model, signal, steps, eta):
     t = torch.linspace(1, 0, steps + 1)[:-1]
     alphas, sigmas = get_alphas_sigmas(t)
 
-    z_sem = model.encode(signal)
+    # z_sem = model.encode(signal)
 
     #Create the noise to sample from (adds a stochastic variation)
     x = torch.randn_like(signal)
@@ -21,7 +21,8 @@ def sample(model, signal, steps, eta):
 
         # Get the model output (v, the predicted velocity)
         with torch.cuda.amp.autocast():
-            v = model.decode(x, ts * t[i], z_sem).float()
+            # v = model.decode(x, ts * t[i], z_sem).float()
+            v = model.decode(x, ts * t[i]).float()
 
         # Predict the noise and the denoised image
         pred = x * alphas[i] - v * sigmas[i]
