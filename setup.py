@@ -16,6 +16,8 @@ setup(
         'pytorch_lightning', 
         'torch',
         'torchaudio',
-        'wandb'
+        'wandb',
+        'cached_conv @ git+https://github.com/caillonantoine/cached_conv.git#egg=cached_conv',
+        'udls @ https://github.com/caillonantoine/UDLS.git#egg=udls'
     ],
 )
