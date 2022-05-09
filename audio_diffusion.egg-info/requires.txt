@@ -1,7 +1,0 @@
-auraloss
-einops
-perceiver-pytorch
-pytorch_lightning
-torch
-torchaudio
-wandb
