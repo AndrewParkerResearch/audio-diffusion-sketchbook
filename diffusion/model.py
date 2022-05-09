@@ -55,11 +55,11 @@ class ResModConvBlock(ResidualBlock):
         super().__init__([
             nn.Conv1d(c_in, c_mid, 5, padding=2),
             nn.GroupNorm(1, c_mid, affine=False),
-            Modulation1d(state, feats_in, c_mid),
+            # Modulation1d(state, feats_in, c_mid),
             nn.ReLU(inplace=True),
             nn.Conv1d(c_mid, c_out, 5, padding=2),
             nn.GroupNorm(1, c_out, affine=False) if not is_last else nn.Identity(),
-            Modulation1d(state, feats_in, c_out) if not is_last else nn.Identity(),
+            # Modulation1d(state, feats_in, c_out) if not is_last else nn.Identity(),
             nn.ReLU(inplace=True) if not is_last else nn.Identity(),
         ], skip)
 
@@ -163,7 +163,7 @@ class AudioDiffusion(nn.Module):
         block = nn.Identity()
 
         # conv_block = partial(ResModConvBlock, self.state, global_args.style_latent_size)
-        conv_block = partial(ResModConvBlock, self.state)
+        conv_block = partial(ResModConvBlock, self.state, 0)
 
         for i in range(self.depth, 0, -1):
             c = c_mults[i - 1]
