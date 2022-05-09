@@ -48,7 +48,7 @@ class DemoCallback(pl.Callback):
         if trainer.global_step % 1000 != 0:
             return
 
-        noise = torch.zeros([4, 2, 131072])
+        noise = torch.zeros([4, 2, 2**17])
 
         # noise = self.pqmf(noise)
 
@@ -102,7 +102,7 @@ def main():
 
     #Bottom level samples = ((training_sample_size / PQMF bands) / [2^model depth])
 
-    args.training_sample_size = 131072 
+    args.training_sample_size = 2**17 # 131072
     
     # bottom_sample_size = args.training_sample_size / args.pqmf_bands / (2**14)
 

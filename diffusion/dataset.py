@@ -39,7 +39,7 @@ class SampleDataset(torch.utils.data.Dataset):
       if self.transform is not None:
         audio = self.transform(audio)
 
-      # audio = torch.cat((audio, audio * -1)) # cat audio with inverted copy
+      audio = torch.cat((audio, audio * -1)) # cat audio with inverted copy
 
       return (audio, audio_filename)
     except Exception as e:

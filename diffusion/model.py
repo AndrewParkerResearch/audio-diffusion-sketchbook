@@ -97,11 +97,11 @@ class AudioDiffusion(nn.Module):
         depth = len(c_mults)
 
         #Number of input/output audio channels for the model
-        n_io_channels = 2 # global_args.pqmf_bands #if global_args.mono else 2 * global_args.pqmf_bands
+        n_io_channels = 2 * 2 # global_args.pqmf_bands #if global_args.mono else 2 * global_args.pqmf_bands
 
         self.timestep_embed = FourierFeatures(1, 16)
 
-        attn_layer = depth - 1
+        attn_layer = depth - 4
 
         block = nn.Identity()
         for i in range(depth, 0, -1):
