@@ -202,7 +202,7 @@ class AudioDiffusion(nn.Module):
             for param in self.net.parameters():
                 param *= 0.5
 
-    def forward(self, input, t, cond_embed):
+    def forward(self, input, t):
         # self.state['cond'] = cond_embed
         timestep_embed = expand_to_planes(self.timestep_embed(t[:, None]), input.shape)
         out = self.net(torch.cat([input, timestep_embed], dim=1))
