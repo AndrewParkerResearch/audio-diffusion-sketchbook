@@ -203,10 +203,10 @@ class AudioDiffusion(nn.Module):
                 param *= 0.5
 
     def forward(self, input, t, cond_embed):
-        self.state['cond'] = cond_embed
+        # self.state['cond'] = cond_embed
         timestep_embed = expand_to_planes(self.timestep_embed(t[:, None]), input.shape)
         out = self.net(torch.cat([input, timestep_embed], dim=1))
-        self.state.clear()
+        # self.state.clear()
         return out
 
 class LightningDiffusion(pl.LightningModule):
