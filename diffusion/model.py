@@ -119,7 +119,7 @@ class GlobalEncoder(nn.Sequential):
     def __init__(self, latent_size, io_channels):
         c_in = io_channels
         # c_mults = [64, 64, 128, 128] + [latent_size] * 10
-        c_mults = [64, 128] + [latent_size] * 5
+        c_mults = [32, 64] + [latent_size] * 2
         layers = []
         c_mult_prev = c_in
         for i, c_mult in enumerate(c_mults):
@@ -147,7 +147,7 @@ class AudioDiffusion(nn.Module):
         super().__init__()
 
         # c_mults = [128, 128, 256, 256] + [512] * 10
-        c_mults = [128, 256] + [512] * 5
+        c_mults = [64, 128] + [128] * 2
        
         self.depth = len(c_mults)
 
