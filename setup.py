@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='audio-diffusion',
+    name='audio-diffusion-sketchbook',
     version='1.0.0',
-    url='https://github.com/zqevans/audio-diffusion.git',
-    author='Zach Evans',
+    url='https://github.com/lonewater/audio-diffusion-sketchbook.git',
+    author='Zach Evans, Andrew Parker',
     packages=find_packages(),    
     dependency_links=[
         "https://github.com/caillonantoine/cached_conv.git#egg=cached_conv",
@@ -16,6 +16,8 @@ setup(
         'torch',
         'torchaudio',
         'pytorch_lightning', 
-        'wandb'
+        'wandb',
+        'cached_conv @ git+https://github.com/caillonantoine/cached_conv.git#egg=cached_conv',
+        'udls @ git+https://github.com/caillonantoine/UDLS.git#egg=udls'
     ],
 )

@@ -97,7 +97,7 @@ class AudioDiffusion(nn.Module):
         depth = len(c_mults)
 
         #Number of input/output audio channels for the model
-        n_io_channels = 2 * global_args.pqmf_bands #if global_args.mono else 2 * global_args.pqmf_bands
+        n_io_channels = 2 * 2 # global_args.pqmf_bands #if global_args.mono else 2 * global_args.pqmf_bands
 
         self.timestep_embed = FourierFeatures(1, 16)
 
@@ -147,7 +147,7 @@ class LightningDiffusion(pl.LightningModule):
         self.model = AudioDiffusion(global_args)
         self.model_ema = deepcopy(self.model)
         self.rng = torch.quasirandom.SobolEngine(1, scramble=True)
-        self.pqmf = PQMF(2, 100, global_args.pqmf_bands)
+        # self.pqmf = PQMF(2, 100, global_args.pqmf_bands)
 
     def forward(self, *args, **kwargs):
         if self.training:
@@ -160,7 +160,7 @@ class LightningDiffusion(pl.LightningModule):
     def eval_batch(self, batch):
         reals = batch[0]
         
-        reals = self.pqmf(reals)
+        # reals = self.pqmf(reals)
 
         # Sample timesteps
         t = self.rng.draw(reals.shape[0])[:, 0].to(reals)

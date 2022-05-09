@@ -16,7 +16,7 @@ from diffusion.inference import sample
 from diffusion.model import LightningDiffusion
 from diffusion.dataset import SampleDataset
 from diffusion.pqmf import CachedPQMF as PQMF
-from diffusion.utils import MidSideDecoding
+from diffusion.utils import MidSideEncoding
 
 # Define utility functions
 @contextmanager
@@ -40,7 +40,7 @@ class DemoCallback(pl.Callback):
     def __init__(self, global_args):
         super().__init__()
         self.pqmf = PQMF(2, 100, global_args.pqmf_bands)
-        #self.ms_decoder = MidSideDecoding()
+        self.ms_decoder = MidSideEncoding()
 
     @rank_zero_only
     @torch.no_grad()
@@ -50,7 +50,7 @@ class DemoCallback(pl.Callback):
 
         noise = torch.zeros([4, 2, 131072])
 
-        noise = self.pqmf(noise)
+        # noise = self.pqmf(noise)
 
         noise = torch.randn_like(noise)
 
@@ -60,14 +60,16 @@ class DemoCallback(pl.Callback):
             fakes = sample(module, noise, 500, 1)
 
         #undo the PQMF encoding
-        fakes = self.pqmf.inverse(fakes.cpu())
+        # fakes = self.pqmf.inverse(fakes.cpu())
+        fakes = fakes.cpu()
 
         log_dict = {}
         for i, fake in enumerate(fakes):
             filename = f'demo_{trainer.global_step:08}_{i:02}.wav'
             
-            #fake = self.ms_decoder(fake).clamp(-1, 1).mul(32767).to(torch.int16).cpu()
-            fake = fake.clamp(-1, 1).mul(32767).to(torch.int16).cpu()
+            fake = self.ms_decoder(fake[0:1]).clamp(-1, 1).mul(32767).to(torch.int16).cpu()
+            ifake = self.ms_decoder(fake[2:3]).clamp(-1, 1).mul(32767).to(torch.int16).cpu()
+            fake = (fake + (ifake * -1)) / 2
             torchaudio.save(filename, fake, 44100)
             log_dict[f'demo_{i}'] = wandb.Audio(filename,
                                                 sample_rate=44100,
@@ -102,9 +104,9 @@ def main():
 
     args.training_sample_size = 131072 
     
-    bottom_sample_size = args.training_sample_size / args.pqmf_bands / (2**14)
+    # bottom_sample_size = args.training_sample_size / args.pqmf_bands / (2**14)
 
-    print(f'bottom sample size: {bottom_sample_size}')
+    # print(f'bottom sample size: {bottom_sample_size}')
 
     train_set = SampleDataset([args.training_dir], args)
     train_dl = data.DataLoader(train_set, args.batch_size, shuffle=True,
