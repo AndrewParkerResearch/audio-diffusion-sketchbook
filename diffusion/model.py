@@ -92,7 +92,7 @@ class AudioDiffusion(nn.Module):
     def __init__(self, global_args):
         super().__init__()
 
-        c_mults = [32, 64] + [64] * 1
+        c_mults = [16] + [32] * 1
        
         depth = len(c_mults)
 
